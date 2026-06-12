@@ -1,0 +1,95 @@
+@import "tailwindcss";
+
+@theme {
+  --color-army-green: #1f3b2d;
+  --color-olive-green: #556b2f;
+  --color-gold: #d4af37;
+  --color-gold-dark: #b8962e;
+  --font-heading: "Bebas Neue", sans-serif;
+  --font-body: "Poppins", sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-black text-white font-body antialiased overflow-x-hidden;
+    font-family: var(--font-body);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-heading);
+    letter-spacing: 0.04em;
+  }
+}
+
+@layer utilities {
+  .font-heading {
+    font-family: var(--font-heading);
+  }
+
+  .font-body {
+    font-family: var(--font-body);
+  }
+
+  .text-gradient-gold {
+    @apply bg-linear-to-r from-gold via-[#f0d060] to-gold-dark bg-clip-text text-transparent;
+  }
+
+  .camo-bg {
+    background-color: #0a0f0c;
+    background-image:
+      radial-gradient(ellipse at 20% 50%, rgba(31, 59, 45, 0.4) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 20%, rgba(85, 107, 47, 0.25) 0%, transparent 40%),
+      radial-gradient(ellipse at 60% 80%, rgba(31, 59, 45, 0.3) 0%, transparent 45%),
+      linear-gradient(
+        135deg,
+        #0d1a14 0%,
+        #1a2e22 25%,
+        #0f1f17 50%,
+        #243a28 75%,
+        #0a120e 100%
+      );
+  }
+
+  .camo-pattern {
+    background-image:
+      repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 10px,
+        rgba(31, 59, 45, 0.03) 10px,
+        rgba(31, 59, 45, 0.03) 20px
+      ),
+      repeating-linear-gradient(
+        -45deg,
+        transparent,
+        transparent 10px,
+        rgba(85, 107, 47, 0.03) 10px,
+        rgba(85, 107, 47, 0.03) 20px
+      );
+  }
+
+  .section-padding {
+    @apply px-4 sm:px-6 lg:px-8 py-16 md:py-24;
+  }
+
+  .gold-border {
+    @apply border border-gold/30;
+  }
+
+  .card-military {
+    @apply bg-army-green/40 backdrop-blur-sm border border-gold/20 rounded-lg overflow-hidden transition-all duration-300;
+  }
+
+  .card-military:hover {
+    @apply border-gold/50 shadow-lg shadow-gold/10 -translate-y-1;
+  }
+}
