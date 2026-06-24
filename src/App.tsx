@@ -19,21 +19,19 @@ export default function App() {
 
   return (
     <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route index element={<Home />} />
+          <Route path="about" element={<About />} />
+          <Route path="training" element={<Training />} />
+          <Route path="events" element={<Events />} />
+          <Route path="gallery" element={<Gallery />} />
+          <Route path="contact" element={<Contact />} />
+        </Route>
+      </Routes>
       <AnimatePresence mode="wait">
         {loading && <LoadingScreen key="loader" onComplete={handleLoadComplete} />}
       </AnimatePresence>
-      {!loading && (
-        <Routes>
-          <Route path="/" element={<Layout />}>
-            <Route index element={<Home />} />
-            <Route path="about" element={<About />} />
-            <Route path="training" element={<Training />} />
-            <Route path="events" element={<Events />} />
-            <Route path="gallery" element={<Gallery />} />
-            <Route path="contact" element={<Contact />} />
-          </Route>
-        </Routes>
-      )}
     </BrowserRouter>
   );
 }

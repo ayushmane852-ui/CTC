@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
 import type { ReactNode } from "react";
 
@@ -16,7 +16,15 @@ export default function FadeInSection({
   direction = "up",
 }: FadeInSectionProps) {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-80px" });
+  const isInView = useInView(ref, { once: true, amount: 0.05, margin: "0px 0px 100px 0px" });
+  const [forceVisible, setForceVisible] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setForceVisible(true), 1200);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const visible = isInView || forceVisible;
 
   const offsets = {
     up: { y: 40, x: 0 },
@@ -32,7 +40,7 @@ export default function FadeInSection({
     <motion.div
       ref={ref}
       initial={{ opacity: 0, x, y }}
-      animate={isInView ? { opacity: 1, x: 0, y: 0 } : { opacity: 0, x, y }}
+      animate={visible ? { opacity: 1, x: 0, y: 0 } : { opacity: 0, x, y }}
       transition={{ duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] }}
       className={className}
     >

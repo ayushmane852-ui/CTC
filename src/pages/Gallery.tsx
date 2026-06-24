@@ -55,34 +55,30 @@ export default function Gallery() {
           ))}
         </FadeInSection>
 
-        <motion.div
-          layout
-          className="columns-1 sm:columns-2 lg:columns-3 gap-4 space-y-4"
-        >
-          <AnimatePresence mode="popLayout">
+        <FadeInSection>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {filtered.map((item, i) => (
-              <FadeInSection key={item.id} delay={(i % 6) * 0.05} className="break-inside-avoid mb-4">
-                <button
-                  type="button"
-                  onClick={() => setLightbox(item)}
-                  className="group relative w-full overflow-hidden rounded-lg block text-left"
-                >
-                  <ImagePlaceholder
-                    src={item.image}
-                    alt={item.title}
-                    category={categoryMap[item.category] ?? "general"}
-                    className={`w-full ${i % 3 === 0 ? "aspect-[3/4]" : i % 3 === 1 ? "aspect-square" : "aspect-[4/3]"}`}
-                    overlay
-                  />
-                  <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center gap-2">
-                    <ZoomIn className="h-8 w-8 text-gold" />
-                    <p className="text-white text-sm font-medium px-4 text-center">{item.title}</p>
-                  </div>
-                </button>
-              </FadeInSection>
+              <button
+                key={item.id}
+                type="button"
+                onClick={() => setLightbox(item)}
+                className="group relative w-full overflow-hidden rounded-lg block text-left"
+              >
+                <ImagePlaceholder
+                  src={item.image}
+                  alt={item.title}
+                  category={categoryMap[item.category] ?? "general"}
+                  className={`w-full ${i % 3 === 0 ? "aspect-[3/4]" : i % 3 === 1 ? "aspect-square" : "aspect-[4/3]"}`}
+                  overlay
+                />
+                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 group-active:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center gap-2">
+                  <ZoomIn className="h-8 w-8 text-gold" />
+                  <p className="text-white text-sm font-medium px-4 text-center">{item.title}</p>
+                </div>
+              </button>
             ))}
-          </AnimatePresence>
-        </motion.div>
+          </div>
+        </FadeInSection>
       </section>
 
       <AnimatePresence>
