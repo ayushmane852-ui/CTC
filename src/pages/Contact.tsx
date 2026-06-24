@@ -1,9 +1,10 @@
 import { useState, type FormEvent } from "react";
-import { Phone, Mail, MapPin, Share2, Camera, Play, MessageCircle } from "lucide-react";
+import { Phone, Mail, MapPin, Share2, Camera, Play, MessageCircle, Loader2 } from "lucide-react";
 import PageBanner from "../components/layout/PageBanner";
 import SectionHeading from "../components/ui/SectionHeading";
 import FadeInSection from "../components/ui/FadeInSection";
 import { contactInfo } from "../data/siteData";
+import { submitContactForm } from "../utils/submitContactForm";
 
 const socialIcons: Record<string, typeof Share2> = {
   Facebook: Share2,
@@ -14,10 +15,32 @@ const socialIcons: Record<string, typeof Share2> = {
 
 export default function Contact() {
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setSubmitted(true);
+    setError("");
+    setSubmitting(true);
+
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+
+    try {
+      await submitContactForm({
+        name: String(formData.get("name") ?? ""),
+        email: String(formData.get("email") ?? ""),
+        phone: String(formData.get("phone") ?? ""),
+        subject: String(formData.get("subject") ?? "general"),
+        message: String(formData.get("message") ?? ""),
+      });
+      setSubmitted(true);
+      form.reset();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to send message. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -93,11 +116,26 @@ export default function Contact() {
             <form onSubmit={handleSubmit} className="card-military p-8 space-y-5">
               <h3 className="font-heading text-2xl text-gold tracking-wide mb-2">Send a Message</h3>
               {submitted ? (
-                <p className="text-white/80 py-8 text-center">
-                  Thank you for your inquiry! We will get back to you shortly.
-                </p>
+                <div className="py-8 text-center space-y-3">
+                  <p className="text-white/80">
+                    Thank you for your inquiry! We will get back to you shortly.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => setSubmitted(false)}
+                    className="text-gold text-sm hover:underline"
+                  >
+                    Send another message
+                  </button>
+                </div>
               ) : (
                 <>
+                  {error && (
+                    <p className="text-red-400 text-sm bg-red-400/10 border border-red-400/30 rounded-sm px-4 py-3">
+                      {error}
+                    </p>
+                  )}
+                  <input type="checkbox" name="botcheck" className="hidden" tabIndex={-1} autoComplete="off" />
                   <div>
                     <label htmlFor="name" className="block text-xs uppercase tracking-wider text-white/50 mb-1">
                       Full Name
@@ -165,9 +203,17 @@ export default function Contact() {
                   </div>
                   <button
                     type="submit"
-                    className="w-full py-3 bg-gold text-black font-semibold uppercase tracking-wider rounded-sm hover:bg-gold-dark transition-colors"
+                    disabled={submitting}
+                    className="w-full py-3 bg-gold text-black font-semibold uppercase tracking-wider rounded-sm hover:bg-gold-dark transition-colors disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                   >
-                    Send Message
+                    {submitting ? (
+                      <>
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        Sending...
+                      </>
+                    ) : (
+                      "Send Message"
+                    )}
                   </button>
                 </>
               )}
